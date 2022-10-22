@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "TANK",
+    "slug": "TANK",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon_tank.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/icon_tank_splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
