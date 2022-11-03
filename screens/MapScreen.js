@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   View
 } from "react-native";
@@ -6,6 +7,7 @@ import { Button } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
 import * as Location from 'expo-location';
+import Geocoder from 'react-native-geocoding';
 
 import CadastroPosto from "../components/CadastroPosto";
 import CalculoRota from "../components/CalculoRota";
@@ -17,13 +19,12 @@ const StackSheet = createNativeStackNavigator();
 const navigationRef = createNavigationContainerRef();
 
 export default function MapScreen({ navigation, route }) {
+
   const initialRegion = {
-    'region': {
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: 0.02,
-      longitudeDelta: 0.02,
-    }
+    latitude: 0,
+    longitude: 0,
+    latitudeDelta: 0,
+    longitudeDelta: 0,
   };
 
   const initialMark = {
@@ -34,8 +35,8 @@ export default function MapScreen({ navigation, route }) {
   const [region, setRegion] = useState(initialRegion);
   const [mark, setMark] = useState(initialMark);
 
-  function onRegionChange(region) {
-    setRegion({ region });
+  const onRegionChange = (regiao) => {
+    setRegion(regiao);
   };
 
   useEffect(() => {
@@ -44,25 +45,9 @@ export default function MapScreen({ navigation, route }) {
     }
   }, [route.params?.id]);
 
-  function setLocationToRegion(location) {
-    let newRegion = {'region':{
-      latitude: 0,
-      longitude: 0,
-      latitudeDelta: 0,
-      longitudeDelta: 0,}
-    };
-
-    let newMark = initialMark;
-
-    newRegion.longitudeDelta = region.region.longitudeDelta;
-    newRegion.latitudeDelta = region.region.latitudeDelta;
-    newRegion.latitude = location.coords.latitude;
-    newRegion.longitude = location.coords.longitude;
-    newMark.latitude = location.coords.latitude;
-    newMark.longitude = location.coords.longitude;
-
-    setRegion(newRegion);
-    setMark(newMark)
+  const setLocationToRegion = (location) => {
+    setRegion({ ...region, latitude: location.coords.latitude, longitude: location.coords.longitude });
+    setMark({ ...mark, latitude: location.coords.latitude, longitude: location.coords.longitude });
   }
 
   const setCurrentLocation = async () => {
@@ -71,32 +56,38 @@ export default function MapScreen({ navigation, route }) {
       alert('Permissão negada, por favor nos permita usar sua localização!');
       return;
     }
-
     let location = await Location.getCurrentPositionAsync({});
     setLocationToRegion(location);
   }
 
+  const setLocationToAdress = async (location) => {
+    Geocoder.init("AIzaSyAgrvvasgUAtMe2mQKkYWQLUx5AXs0ZkAk");
+    Geocoder.from(location.nativeEvent.coordinate.latitude, location.nativeEvent.coordinate.longitude)
+      .then(json => {
+        var addressComponent = json.results[0].formatted_address;
+        navigationRef.navigate('Avaliação', {endereco: addressComponent})
+      }).catch(error => console.warn(error));
+  }
+
   useEffect(() => {
     setCurrentLocation();
-  }, [Location]);
+  }, []);
 
   return (
     <View style={[styles.container]}>
       <View style={[styles.formContainer]}>
-        <Button onPress={setCurrentLocation} >Retorno</Button>
-        <Button onPress={() => navigationRef.navigate('Calculo')} >Calculo</Button>
         <MapView
           region={region}
-          onRegionChange={onRegionChange}
+          //onRegionChange={onRegionChange}
           style={{ height: '100%', width: '100%' }}
-          onPoiClick={() => { }}
+          onPoiClick={setLocationToAdress}
         >
           <Marker coordinate={mark}></Marker>
         </MapView>
       </View>
       <View style={[styles.formContainer]}>
         <NavigationContainer independent={true} ref={navigationRef}>
-          <StackSheet.Navigator initialRouteName="Avaliação">
+          <StackSheet.Navigator initialRouteName="Calculo">
             <StackSheet.Screen
               name="Avaliação"
               component={CadastroPosto}

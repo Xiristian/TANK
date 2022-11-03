@@ -176,7 +176,6 @@ export default function CadastroPessoa() {
                         mode="contained" style={{ marginTop: 16, width: '40%' }}>
                         ENVIAR
                     </Button>
-                    <Text>{JSON.stringify(pessoaRecuperado)}</Text>
                 </View>
             </TouchableWithoutFeedback >
         </KeyboardAvoidingView>

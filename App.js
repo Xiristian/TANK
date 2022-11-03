@@ -1,42 +1,45 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from "expo-status-bar";
-import { Provider as PaperProvider, IconButton } from "react-native-paper";
+import { Provider as PaperProvider, MD3LightTheme } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import MapScreen from "./screens/MapScreen";
 import HomeScreen from './screens/HomeScreen';
 
-const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+const theme = {
+  ...MD3LightTheme,
+  roundness: 2,
+  colors: {
+    ...MD3LightTheme.colors,
+    primary: '#45C4CC',
+    secondary: '#45C4CC',
+    tertiary: '#45C4CC',
+  },
+};
 
 export default function App() {
   return (
-    <PaperProvider>
+    <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
+        <Drawer.Navigator initialRouteName="Home">
+          <Drawer.Screen
             name="Home"
             component={HomeScreen}
-            options={({ navigation }) => ({
-              title: "Home",
-              headerRight: () => (
-                <IconButton
-                  style={{ marginTop: 0, marginRight: -12 }}
-                  icon="plus-box"
-                  onPress={() => navigation.navigate("Map")}
-                  size={28}
-                  color="#333"
-                />
-              ),
+            options={({
+              title: "MEUS DADOS",
             })}
           />
-          <Stack.Screen
+          <Drawer.Screen
             name="Map"
             component={MapScreen}
             options={{
-              title: "Map",
+              title: "CALCULAR ROTA",
             }}
           />
-        </Stack.Navigator>
+        </Drawer.Navigator>
         <StatusBar style="auto" />
       </NavigationContainer>
     </PaperProvider>

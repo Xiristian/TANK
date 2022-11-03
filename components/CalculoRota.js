@@ -25,6 +25,7 @@ export default function CalculoRota({ navigation }) {
         setAcessos(acessos + 1);
         if (acessos == 3) {
             showDialog();
+            setAcessos(0);
         }
     }
 

@@ -72,8 +72,12 @@ export default function CadastroPosto({ navigation, route }) {
             }
             )
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
+    }
+
+    const insereEndereco = () => {
+        setEnderecoPosto(route.params?.endereco);
     }
 
     useEffect(() => {
@@ -81,6 +85,12 @@ export default function CadastroPosto({ navigation, route }) {
             pesquisaPosto();
         }
     }, [route.params?.id]);
+
+    useEffect(() => {
+        if (route.params?.endereco) {
+            insereEndereco();
+        }
+    }, [route.params?.endereco]);
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
@@ -111,7 +121,7 @@ export default function CadastroPosto({ navigation, route }) {
                         label="Informações sobre o posto..."
                         value={infoPosto}
                         multiline={true}
-                        style={[styles.textInput, { height: '66%' }]}
+                        style={[styles.textInput, { height: 230 }]}
                         onChangeText={texto => setInfoPosto(texto)}
                         mode="outlined"
                     />
