@@ -61,7 +61,7 @@ export default function MapScreen({ navigation, route }) {
   }
 
   const setLocationToAdress = async (location) => {
-    Geocoder.init("AIzaSyAgrvvasgUAtMe2mQKkYWQLUx5AXs0ZkAk");
+    Geocoder.init("");
     Geocoder.from(location.nativeEvent.coordinate.latitude, location.nativeEvent.coordinate.longitude)
       .then(json => {
         var addressComponent = json.results[0].formatted_address;
